@@ -1,0 +1,63 @@
+﻿@inherits RadzenComponent
+@using Toolbelt.Blazor.FileDropZone
+
+<RadzenStack class="w-100 h-100" Gap="0.5rem" Orientation="Orientation.Vertical" AlignItems="AlignItems.Stretch" JustifyContent="JustifyContent.Stretch">
+    <div class="dd-button">
+        <FileDropZone @onclick:stopPropagation="true">
+            <InputFile @ref="this.InputFileRef" OnChange="@this.OnInputFileChangeAsync" multiple="@this.Multiple" accept="@this.Accept" hidden />
+            <RadzenButton Shade="Shade.Lighter" ButtonStyle="@this.ButtonStyle" Click="@this.OnClickAsync" IsBusy="@this.IsBusy" Style="@this.BorderStyle()">
+                @if (this.Orientation == Orientation.Vertical)
+                {
+                    <RadzenStack class="user-select-none" Gap="0.5rem" Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center">
+                        @if (!this.IsBusy)
+                        {
+                            <RadzenIcon Icon="@this.Icon" />
+                        }
+                        else
+                        {
+                            <RadzenProgressBarCircular Mode="ProgressBarMode.Indeterminate" ShowValue="false" />
+                        }
+                        <RadzenLabel Text="@this.Text" Style="@($"{this.ManinLabelTextSize}")" />
+                        @if (!string.IsNullOrEmpty(this.Description))
+                        {
+                            <RadzenLabel Text="@this.Description" />
+                        }
+                        @if (!string.IsNullOrEmpty(this.SubDescription))
+                        {
+                            <RadzenLabel Text="@this.SubDescription" Style="@($"{this.SubDescriptionLabelTextSize}")" />
+                        }
+                    </RadzenStack>
+                }
+                else
+                {
+                    <RadzenStack class="user-select-none" Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center">
+                        @if (!this.IsBusy)
+                        {
+                            <RadzenIcon Icon="@this.Icon" />
+                        }
+                        else
+                        {
+                            <RadzenProgressBarCircular Mode="ProgressBarMode.Indeterminate" ShowValue="false" />
+                        }
+                        <RadzenStack Gap="0.5rem" Orientation="Orientation.Vertical" AlignItems="AlignItems.Start" JustifyContent="JustifyContent.Center">
+                            <RadzenLabel Text="@this.Text" Style="@($"{this.ManinLabelTextSize}")" />
+                            @if (!string.IsNullOrEmpty(this.Description))
+                            {
+                                <RadzenLabel Text="@this.Description" />
+                            }
+                            @if (!string.IsNullOrEmpty(this.SubDescription))
+                            {
+                                <RadzenLabel Text="@this.SubDescription" Style="@($"{this.SubDescriptionLabelTextSize}")" />
+                            }
+                        </RadzenStack>
+                    </RadzenStack>
+
+                }
+            </RadzenButton>
+        </FileDropZone>
+    </div>
+    @if (!string.IsNullOrEmpty(this.ErrorMessage))
+    {
+        <RadzenAlert AlertStyle="AlertStyle.Danger" AllowClose="false" Size="AlertSize.Small">@this.ErrorMessage</RadzenAlert>
+    }
+</RadzenStack>

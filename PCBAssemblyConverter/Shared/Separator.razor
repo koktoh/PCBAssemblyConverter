@@ -1,0 +1,16 @@
+﻿<div class="@this.GetClss()"></div>
+
+@code {
+    [Parameter]
+    public Orientation Orientation { get; set; } = Orientation.Horizontal;
+
+    private string GetClss()
+    {
+        return this.Orientation switch
+        {
+            Orientation.Horizontal => "rz-border-bottom rz-border-base-500 w-100",
+            Orientation.Vertical => "rz-border-left rz-border-base-500 h-100",
+            _ => throw new NotImplementedException($"The orientation {this.Orientation} is not implemented.")
+        };
+    }
+}

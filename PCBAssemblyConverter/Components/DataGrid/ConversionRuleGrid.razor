@@ -1,0 +1,154 @@
+﻿@using PCBAssemblyConverter.Core.Rules
+@using PCBAssemblyConverter.Presentation.Enum
+
+<RadzenStack Orientation="Orientation.Vertical" class="w-100">
+    <RadzenDataGrid @ref="@this.RulesGridRef" Data="@(this._isEditing ? this._editingRules : this.Rules)" TItem="ConversionRule" AllowFiltering="false" AllowPaging="false" AllowSorting="false" AllowVirtualization="true" ColumnWidth="300px" EmptyText="@this.LocalizationService.Localize.Message_no_data_to_display" Style="max-height: 500px;">
+        <Columns>
+            <RadzenDataGridColumn Context="rule" Frozen="true" FrozenPosition="FrozenColumnPosition.Left" Width="50px" Visible="this._isEditing">
+                <Template Context="rule">
+                    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" class="w-100">
+                        <RadzenButton Icon="add_circle" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Medium" Click="@(() => this.InsertAfterRow(rule))" />
+                    </RadzenStack>
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn Property="@nameof(ConversionRule.Name)" Title="@this.LocalizationService.Localize.ConversionRule_Name_Property_Display_Text">
+                <Template Context="rule">
+                    @if (!this._isEditing)
+                    {
+                        @rule.Name
+                    }
+                    else
+                    {
+                        <RadzenTextBox @bind-Value="rule.Name" Style="width:100%" />
+                    }
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn Property="@nameof(ConversionRule.Key)" Title="@this.LocalizationService.Localize.ConversionRule_Key_Property_Display_Text">
+                <Template Context="rule">
+                    @if (!this._isEditing)
+                    {
+                        @rule.Key
+                    }
+                    else
+                    {
+                        <RadzenTextBox @bind-Value="rule.Key" Style="width:100%" />
+                    }
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn Property="@nameof(ConversionRule.MatchingStrategy)" Title="@this.LocalizationService.Localize.ConversionRule_MatchingStrategy_Property_Display_Text" Width="150px">
+                <Template Context="rule">
+                    @if (!this._isEditing)
+                    {
+                        @this.LocalizationService.GetEnumDisplayName(rule.MatchingStrategy)
+                    }
+                    else
+                    {
+                        <RadzenDropDown @bind-Value="rule.MatchingStrategy" Data="@EnumOptions.MatchingStrategies.Options.Localize(this.LocalizationService)" TValue="MatchingStrategy" TextProperty="@(nameof(EnumOption<>.DisplayText))" ValueProperty="@(nameof(EnumOption<>.Value))" Style="width:100%" />
+                    }
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn Property="@nameof(ConversionRule.OffsetX)" Title="@($"{this.LocalizationService.Localize.ConversionRule_OffsetX_Property_Display_Text} (mm)")" Width="150px">
+                <Template Context="rule">
+                    @if (!this._isEditing)
+                    {
+                        @rule.OffsetX
+                    }
+                    else
+                    {
+                        <RadzenNumeric @bind-Value="rule.OffsetX" Placeholder="0.00" Step="0.5" Style="width:100%" />
+                    }
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn Property="@nameof(ConversionRule.OffsetY)" Title="@($"{this.LocalizationService.Localize.ConversionRule_OffsetY_Property_Display_Text} (mm)")" Width="150px">
+                <Template Context="rule">
+                    @if (!this._isEditing)
+                    {
+                        @rule.OffsetY
+                    }
+                    else
+                    {
+                        <RadzenNumeric @bind-Value="rule.OffsetY" Placeholder="0.00" Step="0.5" Style="width:100%" />
+                    }
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn Property="@nameof(ConversionRule.ChangeSide)" Title="@this.LocalizationService.Localize.ConversionRule_ChangeSide_Property_Display_Text" Width="150px">
+                <Template Context="rule">
+                    @if (!this._isEditing)
+                    {
+                        @this.LocalizationService.GetEnumDisplayName(rule.ChangeSide)
+                    }
+                    else
+                    {
+                        <RadzenDropDown @bind-Value="rule.ChangeSide" Data="@EnumOptions.ChangeSides.Options.Localize(this.LocalizationService)" TValue="ChangeSide" TextProperty="@nameof(EnumOption<>.DisplayText)" ValueProperty="@(nameof(EnumOption<>.Value))" Style="width:100%" />
+                    }
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn Property="@nameof(ConversionRule.RotationAdjustment)" Title="@this.LocalizationService.Localize.ConversionRule_RotationAdjustment_Property_Display_Text" Width="150px">
+                <Template Context="rule">
+                    @if (!this._isEditing)
+                    {
+                        @this.LocalizationService.GetEnumDisplayName(rule.RotationAdjustment)
+                    }
+                    else
+                    {
+                        <RadzenDropDown @bind-Value="rule.RotationAdjustment" Data="@EnumOptions.RotationAdjustments.Options.Localize(this.LocalizationService)" TValue="RotationAdjustment" TextProperty="@nameof(EnumOption<>.DisplayText)" ValueProperty="@(nameof(EnumOption<>.Value))" Style="width:100%" />
+                    }
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn Property="@nameof(ConversionRule.ManufacturerPartNumber)" Title="@this.LocalizationService.Localize.ConversionRule_ManufacturerPartNumber_Property_Display_Text">
+                <Template Context="rule">
+                    @if (!this._isEditing)
+                    {
+                        @rule.ManufacturerPartNumber
+                    }
+                    else
+                    {
+                        <RadzenTextBox @bind-Value="rule.ManufacturerPartNumber" Style="width:100%" />
+                    }
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn Property="@nameof(ConversionRule.ManufacturerPartNotes)" Title="@this.LocalizationService.Localize.ConversionRule_ManufacturerPartNotes_Property_Display_Text">
+                <Template Context="rule">
+                    @if (!this._isEditing)
+                    {
+                        @rule.ManufacturerPartNotes
+                    }
+                    else
+                    {
+                        <RadzenTextBox @bind-Value="rule.ManufacturerPartNotes" Style="width:100%" />
+                    }
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn Property="@nameof(ConversionRule.RuleAction)" Title="@this.LocalizationService.Localize.ConversionRule_RuleAction_Property_Display_Text" Width="150px">
+                <Template Context="rule">
+                    @if (!this._isEditing)
+                    {
+                        @this.LocalizationService.GetEnumDisplayName(rule.RuleAction)
+                    }
+                    else
+                    {
+                        <RadzenDropDown @bind-Value="rule.RuleAction" Data="@EnumOptions.RuleActions.Options.Localize(this.LocalizationService)" TValue="RuleAction" TextProperty="@(nameof(EnumOption<>.DisplayText))" ValueProperty="@(nameof(EnumOption<>.Value))" Style="width:100%" />
+                    }
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn Context="rule" Frozen="true" FrozenPosition="FrozenColumnPosition.Right" Width="50px" Visible="this._isEditing">
+                <Template Context="rule">
+                    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" class="w-100">
+                        <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Danger" Variant="Variant.Flat" Size="ButtonSize.Medium" Click="@(() => this.DeleteRow(rule))" />
+                    </RadzenStack>
+                </Template>
+            </RadzenDataGridColumn>
+        </Columns>
+    </RadzenDataGrid>
+    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center">
+        @if (!this._isEditing)
+        {
+            <RadzenButton Text="@this.LocalizationService.Localize.ConversionRuleGrid_EditButton_Text" Icon="edit" ButtonStyle="ButtonStyle.Primary" Click="this.EditButtonClick" Disabled="!this.Rules.Any()" />
+        }
+        else
+        {
+            <RadzenButton Text="@this.LocalizationService.Localize.ConversionRuleGrid_SaveButton_Text" Icon="check" ButtonStyle="ButtonStyle.Success" Click="this.SaveButtonClick" />
+            <RadzenButton Text="@this.LocalizationService.Localize.ConversionRuleGrid_CancelButton_Text" Icon="close" ButtonStyle="ButtonStyle.Warning" Click="this.CancelButtonClick" />
+        }
+    </RadzenStack>
+</RadzenStack>

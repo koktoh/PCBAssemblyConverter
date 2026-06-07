@@ -1,0 +1,322 @@
+﻿@page "/converter"
+@using PCBAssemblyConverter.Components.DataGrid
+@using PCBAssemblyConverter.Components.Inputs
+@using PCBAssemblyConverter.Components.UIBlocks
+@using PCBAssemblyConverter.Presentation.Csv
+@using PCBAssemblyConverter.Presentation.Roles
+
+<PageTitle>Converter</PageTitle>
+
+<RadzenStack Orientation="Orientation.Vertical" class="w-100">
+    <RadzenRow>
+        <HeadlineCard Header="@this.LocalizationService.Localize.Converter_InOut_Selector_Header" class="w-100">
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center">
+                <RadzenDropDown TValue="EdaTool" Value="@this.SelectedEdaTool" Data="@(Enum.GetValues<EdaTool>().Cast<Enum>())" Change="@(args => this.OnEdaToolChange((EdaTool)args))" Style="width: 200px;" />
+                <RadzenIcon Icon="arrow_forward" />
+                <RadzenDropDown @bind-Value=@this.SelectedManufacturer Data="@(Enum.GetValues<Manufacturer>().Cast<Enum>())" Style="width: 200px;" />
+            </RadzenStack>
+        </HeadlineCard>
+    </RadzenRow>
+    <RadzenRow>
+        <HeadlineCard Header="@this.LocalizationService.Localize.Converter_BomPos_Input_Header" class="w-100">
+            <RadzenStack Orientation="Orientation.Vertical">
+                <RadzenStack Orientation="Orientation.Horizontal">
+                    <DDButton Text="@this.LocalizationService.Localize.Converter_BomPos_Input_Bom_DDButton_Text"
+                              Description="@this.LocalizationService.Localize.Converter_BomPos_Input_Bom_DDButton_Description"
+                              SubDescription="@($"{this.LocalizationService.Localize.Converter_BomPos_Input_Bom_DDButton_SubDescription}: {string.Join(",", this.EdaBomMediaTypes.SelectMany(x => x.Extensions))}")"
+                              Accept="@(string.Join(",", this.EdaBomMediaTypes.SelectMany(x => x.Extensions)))"
+                              Multiple="false"
+                              Orientation="Orientation.Horizontal"
+                              OnChange="@this.OnInputBomFileChangeAsync" />
+                    <DDButton Text="@this.LocalizationService.Localize.Converter_BomPos_Input_Pos_DDButton_Text"
+                              Description="@this.LocalizationService.Localize.Converter_BomPos_Input_Pos_DDButton_Description"
+                              SubDescription="@($"{this.LocalizationService.Localize.Converter_BomPos_Input_Pos_DDButton_SubDescription}: {string.Join(",", this.EdaPosMediaTypes.SelectMany(x => x.Extensions))}")"
+                              Accept="@(string.Join(",", this.EdaPosMediaTypes.SelectMany(x => x.Extensions)))"
+                              Multiple="false"
+                              Orientation="Orientation.Horizontal"
+                              OnChange="@this.OnInputPosFileChangeAsync" />
+                </RadzenStack>
+                <RadzenPanel AllowCollapse="true" Collapsed="true">
+                    <HeaderTemplate>
+                        <RadzenText Text="@this.LocalizationService.Localize.Converter_BomData_Header" TextStyle="TextStyle.H6" />
+                    </HeaderTemplate>
+                    <ChildContent>
+                        <RadzenStack Orientation="Orientation.Vertical">
+                            <RadzenCard Variant="Variant.Outlined">
+                                <RadzenStack Orientation="Orientation.Vertical" JustifyContent="JustifyContent.Center">
+                                    <div class="key-value-grid">
+                                        <div>
+                                            <RadzenText Text="@($"{this.LocalizationService.Localize.FileName_Display_Text}")" />
+                                        </div>
+                                        <div>
+                                            <RadzenText Text="@this.SrcBomFileName" Style="font-weight: bold;" />
+                                        </div>
+                                        <div>
+                                            <RadzenText Text="@($"{this.LocalizationService.Localize.RecordCount_Display_Text}")" />
+                                        </div>
+                                        <div>
+                                            <RadzenText Text="@($"{this.SrcBomCsv.Rows.Count} {this.LocalizationService.Localize.RecordCount_Format}")" />
+                                        </div>
+                                    </div>
+                                </RadzenStack>
+                            </RadzenCard>
+                            <RadzenDataGrid Data="@this.SrcBomCsv.Rows" TItem="CsvRow" ColumnWidth="200px" AllowPaging="true" EmptyText="@this.LocalizationService.Localize.Message_no_data_to_display">
+                                <Columns>
+                                    @for (var i = 0; i < this.SrcBomCsv.Headers.Count; i++)
+                                    {
+                                        var index = i;
+                                        var header = this.SrcBomCsv.Headers[index];
+                                        <RadzenDataGridColumn @key="@header" Title="@header" Type="@typeof(string)">
+                                            <Template>
+                                                @context[index]
+                                            </Template>
+                                        </RadzenDataGridColumn>
+                                    }
+                                </Columns>
+                            </RadzenDataGrid>
+                        </RadzenStack>
+                    </ChildContent>
+                    <SummaryTemplate>
+                        <RadzenCard Variant="Variant.Outlined">
+                            <RadzenStack Gap="5px" Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Start" class="w-100">
+                                @if (this.SrcBomCsv.Rows.Any())
+                                {
+                                    <RadzenText Text="@($"{this.SrcBomFileName}")" Style="font-weight: bold;" />
+                                    <RadzenText Text="@($"({this.SrcBomCsv.Rows.Count} {this.LocalizationService.Localize.RecordCount_Format})")" />
+                                }
+                                else
+                                {
+                                    <RadzenText Text="@this.LocalizationService.Localize.Message_no_data_to_display" />
+                                }
+                            </RadzenStack>
+                        </RadzenCard>
+                    </SummaryTemplate>
+                </RadzenPanel>
+                <RadzenPanel AllowCollapse="true" Collapsed="true">
+                    <HeaderTemplate>
+                        <RadzenText Text="@this.LocalizationService.Localize.Converter_PosData_Header" TextStyle="TextStyle.H6" />
+                    </HeaderTemplate>
+                    <ChildContent>
+                        <RadzenStack Orientation="Orientation.Vertical">
+                            <RadzenCard Variant="Variant.Outlined">
+                                <RadzenStack Orientation="Orientation.Vertical" JustifyContent="JustifyContent.Center">
+                                    <div class="key-value-grid">
+                                        <div>
+                                            <RadzenText Text="@($"{this.LocalizationService.Localize.FileName_Display_Text}")" />
+                                        </div>
+                                        <div>
+                                            <RadzenText Text="@this.SrcPosFileName" Style="font-weight: bold;" />
+                                        </div>
+                                        <div>
+                                            <RadzenText Text="@($"{this.LocalizationService.Localize.RecordCount_Display_Text}")" />
+                                        </div>
+                                        <div>
+                                            <RadzenText Text="@($"{this.SrcPosCsv.Rows.Count} {this.LocalizationService.Localize.RecordCount_Format}")" />
+                                        </div>
+                                    </div>
+                                </RadzenStack>
+                            </RadzenCard>
+                            <RadzenDataGrid Data="@this.SrcPosCsv.Rows" TItem="CsvRow" ColumnWidth="200px" AllowPaging="true" EmptyText="@this.LocalizationService.Localize.Message_no_data_to_display">
+                                <Columns>
+                                    @for (var i = 0; i < this.SrcPosCsv.Headers.Count; i++)
+                                    {
+                                        var index = i;
+                                        var header = this.SrcPosCsv.Headers[index];
+                                        <RadzenDataGridColumn @key="@header" Title="@header" Type="@typeof(string)">
+                                            <Template>
+                                                @context[index]
+                                            </Template>
+                                        </RadzenDataGridColumn>
+                                    }
+                                </Columns>
+                            </RadzenDataGrid>
+                        </RadzenStack>
+                    </ChildContent>
+                    <SummaryTemplate>
+                        <RadzenCard Variant="Variant.Outlined">
+                            <RadzenStack Gap="5px" Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Start" class="w-100">
+                                @if (this.SrcPosCsv.Rows.Any())
+                                {
+                                    <RadzenText Text="@($"{this.SrcPosFileName}")" Style="font-weight: bold;" />
+                                    <RadzenText Text="@($"({this.SrcPosCsv.Rows.Count} {this.LocalizationService.Localize.RecordCount_Format})")" />
+                                }
+                                else
+                                {
+                                    <RadzenText Text="@this.LocalizationService.Localize.Message_no_data_to_display" />
+                                }
+                            </RadzenStack>
+                        </RadzenCard>
+                    </SummaryTemplate>
+                </RadzenPanel>
+            </RadzenStack>
+        </HeadlineCard>
+    </RadzenRow>
+    <HeadlineCard Header="@this.LocalizationService.Localize.Converter_ConversionRule_Editor_Header" ShowInfoButton="true" InfoButtonClick="@this.OnInfoButtonClick" class="w-100">
+        <RadzenStack Orientation="Orientation.Vertical">
+            <DDButton Text="@this.LocalizationService.Localize.Converter_ConversionRule_Editor_ConversionRule_DDButton_Text"
+                      Description="@this.LocalizationService.Localize.Converter_ConversionRule_Editor_ConversionRule_DDButton_Description"
+                      SubDescription="@($"{this.LocalizationService.Localize.Converter_ConversionRule_Editor_ConversionRule_DDButton_SubDescription}: {string.Join(",", this.ConversionRuleMediaType.Extensions)}")"
+                      Accept="@(string.Join(",", this.ConversionRuleMediaType.Extensions))"
+                      Multiple="false"
+                      Orientation="Orientation.Horizontal"
+                      OnChange="@this.OnInputConversionRuleChangeAsync" />
+            @if (this.ConversionRules.Any())
+            {
+                <RadzenCard Variant="Variant.Outlined">
+                    <RadzenStack Gap="5px" Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Start" class="w-100">
+                        <div class="key-value-grid">
+                            @if (!string.IsNullOrEmpty(this.ConversionRuleFileName))
+                            {
+                                <div>
+                                    <RadzenText Text="@($"{this.LocalizationService.Localize.FileName_Display_Text}")" />
+                                </div>
+                                <div>
+                                    <RadzenText Text="@this.SrcBomFileName" Style="font-weight: bold;" />
+                                </div>
+                            }
+                            <div>
+                                <RadzenText Text="@($"{this.LocalizationService.Localize.RecordCount_Display_Text}")" />
+                            </div>
+                            <div>
+                                <RadzenText Text="@($"{this.ConversionRules.Count()} {this.LocalizationService.Localize.RecordCount_Format}")" />
+                            </div>
+                        </div>
+                    </RadzenStack>
+                </RadzenCard>
+            }
+            <ConversionRuleGrid @bind-Rules="this.ConversionRules" />
+        </RadzenStack>
+    </HeadlineCard>
+    <HeadlineCard Header="@this.LocalizationService.Localize.Converter_Result_Header" class="w-100">
+        <RadzenStack Orientation="Orientation.Vertical">
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center">
+                <RadzenButton Text="@this.LocalizationService.Localize.Converter_ConvertButton_Text" Size="ButtonSize.Large" Click="@this.OnConvertAsync" Disabled="@(!this.CanConvert())" />
+            </RadzenStack>
+            @if (this.IsErroredOnBomConverting)
+            {
+                <RadzenAlert Text="@this.LocalizationService.Localize.Converter_Error_Message_Bom_convert_failed" AlertStyle="AlertStyle.Danger" Size="AlertSize.Small" AllowClose="false" />
+            }
+            @if (this.IsErroredOnPosConverting)
+            {
+                <RadzenAlert Text="@this.LocalizationService.Localize.Converter_Error_Message_Pos_convert_failed" AlertStyle="AlertStyle.Danger" Size="AlertSize.Small" AllowClose="false" />
+            }
+            <RadzenPanel AllowCollapse="true" Collapsed="true">
+                <HeaderTemplate>
+                    <RadzenText Text="@this.LocalizationService.Localize.Converter_BomData_Header" TextStyle="TextStyle.H6" />
+                </HeaderTemplate>
+                <ChildContent>
+                    <RadzenStack Orientation="Orientation.Vertical">
+                        <RadzenCard Variant="Variant.Outlined">
+                            <RadzenStack Orientation="Orientation.Vertical" JustifyContent="JustifyContent.Center">
+                                <div class="key-value-grid">
+                                    <div>
+                                        <RadzenText Text="@($"{this.LocalizationService.Localize.RecordCount_Display_Text}")" />
+                                    </div>
+                                    <div>
+                                        <RadzenText Text="@($"{this.DstBomCsv.Rows.Count} {this.LocalizationService.Localize.RecordCount_Format}")" />
+                                    </div>
+                                </div>
+                            </RadzenStack>
+                        </RadzenCard>
+                        <RadzenDataGrid Data="@this.DstBomCsv.Rows" TItem="CsvRow" ColumnWidth="200px" AllowPaging="true" EmptyText="@this.LocalizationService.Localize.Message_no_data_to_display">
+                            <Columns>
+                                @for (var i = 0; i < this.DstBomCsv.Headers.Count; i++)
+                                {
+                                    var index = i;
+                                    var header = this.DstBomCsv.Headers[index];
+                                    <RadzenDataGridColumn @key="@header" Title="@header" Type="@typeof(string)">
+                                        <Template>
+                                            @context[index]
+                                        </Template>
+                                    </RadzenDataGridColumn>
+                                }
+                            </Columns>
+                        </RadzenDataGrid>
+                    </RadzenStack>
+                </ChildContent>
+                <SummaryTemplate>
+                    <RadzenCard Variant="Variant.Outlined">
+                        <RadzenStack Gap="5px" Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Start" class="w-100">
+                            @if (this.DstBomCsv.Rows.Any())
+                            {
+                                <RadzenText Text="@($"{this.DstBomCsv.Rows.Count} {this.LocalizationService.Localize.RecordCount_Format}")" />
+                            }
+                            else
+                            {
+                                <RadzenText Text="@this.LocalizationService.Localize.Message_no_data_to_display" />
+                            }
+                        </RadzenStack>
+                    </RadzenCard>
+                </SummaryTemplate>
+            </RadzenPanel>
+            <RadzenPanel AllowCollapse="true" Collapsed="true">
+                <HeaderTemplate>
+                    <RadzenText Text="@this.LocalizationService.Localize.Converter_PosData_Header" TextStyle="TextStyle.H6" />
+                </HeaderTemplate>
+                <ChildContent>
+                    <RadzenStack Orientation="Orientation.Vertical">
+                        <RadzenCard Variant="Variant.Outlined">
+                            <RadzenStack Orientation="Orientation.Vertical" JustifyContent="JustifyContent.Center">
+                                <div class="key-value-grid">
+                                    <div>
+                                        <RadzenText Text="@($"{this.LocalizationService.Localize.RecordCount_Display_Text}")" />
+                                    </div>
+                                    <div>
+                                        <RadzenText Text="@($"{this.DstPosCsv.Rows.Count} {this.LocalizationService.Localize.RecordCount_Format}")" />
+                                    </div>
+                                </div>
+                            </RadzenStack>
+                        </RadzenCard>
+                        <RadzenDataGrid Data="@this.DstPosCsv.Rows" TItem="CsvRow" ColumnWidth="200px" AllowPaging="true" EmptyText="@this.LocalizationService.Localize.Message_no_data_to_display">
+                            <Columns>
+                                @for (var i = 0; i < this.DstPosCsv.Headers.Count; i++)
+                                {
+                                    var index = i;
+                                    var header = this.DstPosCsv.Headers[index];
+                                    <RadzenDataGridColumn @key="@header" Title="@header" Type="@typeof(string)">
+                                        <Template>
+                                            @context[index]
+                                        </Template>
+                                    </RadzenDataGridColumn>
+                                }
+                            </Columns>
+                        </RadzenDataGrid>
+                    </RadzenStack>
+                </ChildContent>
+                <SummaryTemplate>
+                    <RadzenCard Variant="Variant.Outlined">
+                        <RadzenStack Gap="5px" Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Start" class="w-100">
+                            @if (this.DstPosCsv.Rows.Any())
+                            {
+                                <RadzenText Text="@($"{this.DstPosCsv.Rows.Count} {this.LocalizationService.Localize.RecordCount_Format}")" />
+                            }
+                            else
+                            {
+                                <RadzenText Text="@this.LocalizationService.Localize.Message_no_data_to_display" />
+                            }
+                        </RadzenStack>
+                    </RadzenCard>
+                </SummaryTemplate>
+            </RadzenPanel>
+        </RadzenStack>
+    </HeadlineCard>
+    <RadzenCard>
+        <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center">
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center">
+                <RadzenButton Text="@this.LocalizationService.Localize.Converter_DownloadButton_Text" Icon="download" Size="ButtonSize.Large" Click="@this.OnDownloadAsync" Disabled="@(!this.CanDownload())" />
+            </RadzenStack>
+            @if (this.IsErroredOnBomConverting)
+            {
+                <RadzenAlert Text="@this.LocalizationService.Localize.Converter_Error_Message_Bom_convert_failed" AlertStyle="AlertStyle.Danger" Size="AlertSize.Small" AllowClose="false" />
+            }
+            @if (this.IsErroredOnPosConverting)
+            {
+                <RadzenAlert Text="@this.LocalizationService.Localize.Converter_Error_Message_Pos_convert_failed" AlertStyle="AlertStyle.Danger" Size="AlertSize.Small" AllowClose="false" />
+            }
+            @if (this.IsErroredOnDownloading)
+            {
+                <RadzenAlert Text="@this.LocalizationService.Localize.Converter_Error_Message_download_file_create_failed" AlertStyle="AlertStyle.Danger" Size="AlertSize.Small" AllowClose="false" />
+            }
+        </RadzenStack>
+    </RadzenCard>
+</RadzenStack>
