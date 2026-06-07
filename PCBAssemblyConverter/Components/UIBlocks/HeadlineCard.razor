@@ -1,0 +1,16 @@
+﻿@using PCBAssemblyConverter.Shared
+@inherits RadzenCard
+
+<RadzenCard Attributes="@base.Attributes" ContextMenu="@base.ContextMenu" Culture="@base.Culture" MouseEnter="@base.MouseEnter" MouseLeave="@base.MouseLeave" Style="@base.Style" Variant="@base.Variant" Visible="@base.Visible">
+    <RadzenStack Orientation="Orientation.Vertical" class="w-100">
+        <RadzenStack Gap="0.5rem" Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Left">
+            <RadzenText Text="@this.Header" TextStyle="@this.HeaderStyle" />
+            @if (this.ShowInfoButton)
+            {
+                <RadzenButton Icon="info" Variant="Variant.Text" ButtonStyle="ButtonStyle.Info" Shade="Shade.Light" Click="@this.OnInfoButtonClick" />
+            }
+        </RadzenStack>
+        <Separator Orientation="Orientation.Horizontal" />
+        @base.ChildContent
+    </RadzenStack>
+</RadzenCard>

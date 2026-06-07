@@ -1,0 +1,178 @@
+﻿@page "/conversion-rule-spec-table"
+
+@using PCBAssemblyConverter.Localization
+@using PCBAssemblyConverter.Presentation.Enum
+
+@inject LocalizationService LocalizationService
+
+<RadzenTable GridLines="DataGridGridLines.Both">
+    <RadzenTableHeader>
+        <RadzenTableHeaderRow>
+            <RadzenTableHeaderCell Style="width: 200px">@this.LocalizationService.Localize.ConversionRule_SpecTable_Header_Name</RadzenTableHeaderCell>
+            <RadzenTableHeaderCell Style="width: 100px">@this.LocalizationService.Localize.ConversionRule_SpecTable_Header_DataType</RadzenTableHeaderCell>
+            <RadzenTableHeaderCell Style="width: 200px">@this.LocalizationService.Localize.ConversionRule_SpecTable_Header_Enum</RadzenTableHeaderCell>
+            <RadzenTableHeaderCell Style="width: 600px" colspan="3">@this.LocalizationService.Localize.ConversionRule_SpecTable_Header_Description</RadzenTableHeaderCell>
+        </RadzenTableHeaderRow>
+    </RadzenTableHeader>
+    <RadzenTableBody>
+        <RadzenTableRow>
+            <RadzenTableCell>@this.LocalizationService.Localize.ConversionRule_Name_Property_Display_Text</RadzenTableCell>
+            <RadzenTableCell>@this.LocalizationService.Localize.ConversionRule_SpecTable_Name_Property_DataType</RadzenTableCell>
+            <RadzenTableCell>@this.LocalizationService.Localize.ConversionRule_SpecTable_Name_Property_Enum</RadzenTableCell>
+            <RadzenTableCell colspan="3">
+                <div class="text-wrap">
+                    @this.LocalizationService.Localize.ConversionRule_SpecTable_Name_Property_Description_Sentence_1
+                </div>
+            </RadzenTableCell>
+        </RadzenTableRow>
+        <RadzenTableRow>
+            <RadzenTableCell>@this.LocalizationService.Localize.ConversionRule_Key_Property_Display_Text</RadzenTableCell>
+            <RadzenTableCell>@this.LocalizationService.Localize.ConversionRule_SpecTable_Key_Property_DataType</RadzenTableCell>
+            <RadzenTableCell>@this.LocalizationService.Localize.ConversionRule_SpecTable_Key_Property_Enum</RadzenTableCell>
+            <RadzenTableCell colspan="3">
+                <div class="text-wrap">
+                    @this.LocalizationService.Localize.ConversionRule_SpecTable_Key_Property_Description_Sentence_1
+                </div>
+            </RadzenTableCell>
+        </RadzenTableRow>
+        <RadzenTableRow>
+            <RadzenTableCell>@this.LocalizationService.Localize.ConversionRule_MatchingStrategy_Property_Display_Text</RadzenTableCell>
+            <RadzenTableCell>@this.LocalizationService.Localize.ConversionRule_SpecTable_MatchingStrategy_Property_DataType</RadzenTableCell>
+            <RadzenTableCell>
+                <ul>
+                    @foreach (var option in EnumOptions.MatchingStrategies.Options)
+                    {
+                        <li>@this.LocalizationService.GetEnumDisplayName(option.Value)</li>
+                    }
+                </ul>
+            </RadzenTableCell>
+            <RadzenTableCell colspan="3">
+                <div class="text-wrap">
+                    <ul>
+                        @foreach (var option in EnumOptions.MatchingStrategies.Options)
+                        {
+                            <li>
+                                @this.LocalizationService.GetEnumDisplayName(option.Value)
+                                <ul>
+                                    <li>@this.LocalizationService.GetEnumDescription(option.Value)</li>
+                                </ul>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </RadzenTableCell>
+        </RadzenTableRow>
+        <RadzenTableRow>
+            <RadzenTableCell>@this.LocalizationService.Localize.ConversionRule_OffsetX_Property_Display_Text</RadzenTableCell>
+            <RadzenTableCell>@this.LocalizationService.Localize.ConversionRule_SpecTable_OffsetX_Property_DataType</RadzenTableCell>
+            <RadzenTableCell>@this.LocalizationService.Localize.ConversionRule_SpecTable_OffsetX_Property_Enum</RadzenTableCell>
+            <RadzenTableCell colspan="3">
+                <div class="text-wrap">
+                    @this.LocalizationService.Localize.ConversionRule_SpecTable_OffsetX_Property_Description_Sentence_1
+                </div>
+            </RadzenTableCell>
+        </RadzenTableRow>
+        <RadzenTableRow>
+            <RadzenTableCell>@this.LocalizationService.Localize.ConversionRule_OffsetY_Property_Display_Text</RadzenTableCell>
+            <RadzenTableCell>@this.LocalizationService.Localize.ConversionRule_SpecTable_OffsetY_Property_DataType</RadzenTableCell>
+            <RadzenTableCell>@this.LocalizationService.Localize.ConversionRule_SpecTable_OffsetY_Property_Enum</RadzenTableCell>
+            <RadzenTableCell colspan="3" class="text-wrap">
+                <div class="text-wrap">
+                    @this.LocalizationService.Localize.ConversionRule_SpecTable_OffsetY_Property_Description_Sentence_1
+                </div>
+            </RadzenTableCell>
+        </RadzenTableRow>
+        <RadzenTableRow>
+            <RadzenTableCell>@this.LocalizationService.Localize.ConversionRule_ChangeSide_Property_Display_Text</RadzenTableCell>
+            <RadzenTableCell>@this.LocalizationService.Localize.ConversionRule_SpecTable_ChangeSide_Property_DataType</RadzenTableCell>
+            <RadzenTableCell>
+                <ul>
+                    @foreach (var option in EnumOptions.ChangeSides.Options)
+                    {
+                        <li>@this.LocalizationService.GetEnumDisplayName(option.Value)</li>
+                    }
+                </ul>
+            </RadzenTableCell>
+            <RadzenTableCell colspan="3">
+                <div class="text-wrap">
+                    <ul>
+                        @foreach (var option in EnumOptions.ChangeSides.Options)
+                        {
+                            <li>
+                                @this.LocalizationService.GetEnumDisplayName(option.Value)
+                                <ul>
+                                    <li>@this.LocalizationService.GetEnumDescription(option.Value)</li>
+                                </ul>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </RadzenTableCell>
+        </RadzenTableRow>
+        <RadzenTableRow>
+            <RadzenTableCell>@this.LocalizationService.Localize.ConversionRule_RotationAdjustment_Property_Display_Text</RadzenTableCell>
+            <RadzenTableCell>@this.LocalizationService.Localize.ConversionRule_SpecTable_RatationAdjustment_Property_DataType</RadzenTableCell>
+            <RadzenTableCell>
+                <ul>
+                    @foreach (var option in EnumOptions.RotationAdjustments.Options)
+                    {
+                        <li>@this.LocalizationService.GetEnumDisplayName(option.Value)</li>
+                    }
+                </ul>
+            </RadzenTableCell>
+            <RadzenTableCell colspan="3">
+                <div class="text-wrap">
+                    @this.LocalizationService.Localize.ConversionRule_SpecTable_RatationAdjustment_Property_Description_Sentence_1
+                </div>
+            </RadzenTableCell>
+        </RadzenTableRow>
+        <RadzenTableRow>
+            <RadzenTableCell>@this.LocalizationService.Localize.ConversionRule_ManufacturerPartNumber_Property_Display_Text</RadzenTableCell>
+            <RadzenTableCell>@this.LocalizationService.Localize.ConversionRule_SpecTable_ManufacturerPartNotes_Property_DataType</RadzenTableCell>
+            <RadzenTableCell>@this.LocalizationService.Localize.ConversionRule_SpecTable_ManufacturerPartNumber_Property_Enum</RadzenTableCell>
+            <RadzenTableCell colspan="3">
+                <div class="text-wrap">
+                    @this.LocalizationService.Localize.ConversionRule_SpecTable_ManufacturerPartNumber_Property_Description_Sentence_1
+                </div>
+            </RadzenTableCell>
+        </RadzenTableRow>
+        <RadzenTableRow>
+            <RadzenTableCell>@this.LocalizationService.Localize.ConversionRule_ManufacturerPartNotes_Property_Display_Text</RadzenTableCell>
+            <RadzenTableCell>@this.LocalizationService.Localize.ConversionRule_SpecTable_ManufacturerPartNotes_Property_DataType</RadzenTableCell>
+            <RadzenTableCell>@this.LocalizationService.Localize.ConversionRule_SpecTable_ManufacturerPartNotes_Property_Enum</RadzenTableCell>
+            <RadzenTableCell colspan="3">
+                <div class="text-wrap">
+                    @this.LocalizationService.Localize.ConversionRule_SpecTable_ManufacturerPartNotes_Property_Description_Sentence_1<br />
+                    @this.LocalizationService.Localize.ConversionRule_SpecTable_ManufacturerPartNotes_Property_Description_Sentence_2
+                </div>
+            </RadzenTableCell>
+        </RadzenTableRow>
+        <RadzenTableRow>
+            <RadzenTableCell>@this.LocalizationService.Localize.ConversionRule_RuleAction_Property_Display_Text</RadzenTableCell>
+            <RadzenTableCell>@this.LocalizationService.Localize.ConversionRule_SpecTable_RuleAction_Property_DataType</RadzenTableCell>
+            <RadzenTableCell>
+                <ul>
+                    @foreach (var option in EnumOptions.RuleActions.Options)
+                    {
+                        <li>@this.LocalizationService.GetEnumDisplayName(option.Value)</li>
+                    }
+                </ul>
+            </RadzenTableCell>
+            <RadzenTableCell colspan="3">
+                <div class="text-wrap">
+                    <ul>
+                        @foreach (var option in EnumOptions.RuleActions.Options)
+                        {
+                            <li>
+                                @this.LocalizationService.GetEnumDisplayName(option.Value)
+                                <ul>
+                                    <li>@this.LocalizationService.GetEnumDescription(option.Value)</li>
+                                </ul>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </RadzenTableCell>
+        </RadzenTableRow>
+    </RadzenTableBody>
+</RadzenTable>

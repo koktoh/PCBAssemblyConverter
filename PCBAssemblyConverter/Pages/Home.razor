@@ -1,0 +1,88 @@
+﻿@page "/"
+@using PCBAssemblyConverter.Components.UIBlocks
+@using PCBAssemblyConverter.Localization
+@using PCBAssemblyConverter.Presentation.Roles
+@using PCBAssemblyConverter.Shared
+
+@inject LocalizationService LocalizationService
+@inject NavigationManager NavigationManager
+@inject DialogService DialogService
+
+<PageTitle>Home</PageTitle>
+
+<RadzenStack Orientation="Orientation.Vertical" class="w-100">
+    <HeadlineCard Header="@this.LocalizationService.Localize.Home_About_Header">
+        @this.LocalizationService.Localize.Home_About_Sentence_1<br />
+        @this.LocalizationService.Localize.Home_About_Sentence_2
+    </HeadlineCard>
+    <HeadlineCard Header="@this.LocalizationService.Localize.Home_Support_Header">
+        <ul>
+            <li>
+                @this.LocalizationService.Localize.Home_Support_Eda
+                <ul>
+                    @foreach (var tool in Enum.GetValues<EdaTool>())
+                    {
+                        <li>@tool</li>
+                    }
+                </ul>
+            </li>
+        </ul>
+        <ul>
+            <li>
+                @this.LocalizationService.Localize.Home_Support_Manufacturer
+                <ul>
+                    @foreach (var manufacturere in Enum.GetValues<Manufacturer>())
+                    {
+                        <li>@manufacturere</li>
+                    }
+                </ul>
+            </li>
+        </ul>
+    </HeadlineCard>
+    <HeadlineCard Header="@this.LocalizationService.Localize.Home_HowToUse_Header">
+        <ol>
+            <li>@this.LocalizationService.Localize.Home_HowToUse_Step_1</li>
+            <li>@this.LocalizationService.Localize.Home_HowToUse_Step_2</li>
+            <li>
+                @this.LocalizationService.Localize.Home_HowToUse_Step_3
+                <RadzenButton Icon="info" Variant="Variant.Text" ButtonStyle="ButtonStyle.Info" Shade="Shade.Light" Click="this.OnConversionRuleInfoButtonClick" />
+                <ul>
+                    <li>@this.LocalizationService.Localize.Home_HowToUse_Step_3_SubSentence_1</li>
+                    <li>@this.LocalizationService.Localize.Home_HowToUse_Step_3_SubSentence_2</li>
+                </ul>
+            </li>
+            <li>@this.LocalizationService.Localize.Home_HowToUse_Step_4</li>
+        </ol>
+    </HeadlineCard>
+    <RadzenCard class="w-100">
+        <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center">
+            <RadzenButton Text="@this.LocalizationService.Localize.Home_StartButton_Text" Size="ButtonSize.Large" Click="@this.OnStartButtonClick" />
+        </RadzenStack>
+    </RadzenCard>
+</RadzenStack>
+
+@code {
+    private void OnStartButtonClick()
+    {
+        this.NavigationManager.NavigateTo("converter");
+    }
+
+    private async Task OnConversionRuleInfoButtonClick()
+    {
+        await this.DialogService.OpenAsync<ConversionRuleSpecTable>(
+            $"{this.LocalizationService.Localize.ConversionRule_Description_Header}",
+            null,
+            new DialogOptions()
+            {
+                CloseDialogOnOverlayClick = true,
+                Width = "80%",
+            });
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        this.LocalizationService.OnLanguageChanged += this.StateHasChanged;
+    }
+}
