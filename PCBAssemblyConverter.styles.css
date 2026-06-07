@@ -1,0 +1,109 @@
+/* /Components/Inputs/DDButton.razor.rz.scp.css */
+.dd-button[b-zstzuf9rnm] {
+    --icon-size: 48px;
+    width: 100%;
+    height: 100%;
+}
+
+    .dd-button[b-zstzuf9rnm]  .rz-button {
+        width: 100%;
+        height: 100%;
+        border: dashed 2px var(--rz-primary);
+        min-height: 100px;
+    }
+
+    .dd-button[b-zstzuf9rnm]  i {
+        font-size: var(--icon-size);
+        padding: 1.5rem;
+        cursor: pointer;
+    }
+
+    .dd-button[b-zstzuf9rnm]  .rz-progressbar-circular {
+        width: var(--icon-size);
+        height: var(--icon-size);
+    }
+
+    .dd-button[b-zstzuf9rnm]  label {
+        font-size: 1rem;
+        letter-spacing: normal;
+        text-transform: none;
+        cursor: pointer;
+    }
+/* /Layout/MainLayout.razor.rz.scp.css */
+.page[b-11aeh96nfr] {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+main[b-11aeh96nfr] {
+    flex: 1;
+}
+
+.sidebar[b-11aeh96nfr] {
+    background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
+}
+
+.top-row[b-11aeh96nfr] {
+    background-color: #f7f7f7;
+    border-bottom: 1px solid #d6d5d5;
+    justify-content: flex-end;
+    height: 3.5rem;
+    display: flex;
+    align-items: center;
+}
+
+    .top-row[b-11aeh96nfr]  a, .top-row[b-11aeh96nfr]  .btn-link {
+        white-space: nowrap;
+        margin-left: 1.5rem;
+        text-decoration: none;
+    }
+
+    .top-row[b-11aeh96nfr]  a:hover, .top-row[b-11aeh96nfr]  .btn-link:hover {
+        text-decoration: underline;
+    }
+
+    .top-row[b-11aeh96nfr]  a:first-child {
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+@media (max-width: 640.98px) {
+    .top-row[b-11aeh96nfr] {
+        justify-content: space-between;
+    }
+
+    .top-row[b-11aeh96nfr]  a, .top-row[b-11aeh96nfr]  .btn-link {
+        margin-left: 0;
+    }
+}
+
+@media (min-width: 641px) {
+    .page[b-11aeh96nfr] {
+        flex-direction: row;
+    }
+
+    .sidebar[b-11aeh96nfr] {
+        width: 250px;
+        height: 100vh;
+        position: sticky;
+        top: 0;
+    }
+
+    .top-row[b-11aeh96nfr] {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+    }
+
+    .top-row.auth[b-11aeh96nfr]  a:first-child {
+        flex: 1;
+        text-align: right;
+        width: 0;
+    }
+
+    .top-row[b-11aeh96nfr], article[b-11aeh96nfr] {
+        padding-left: 2rem !important;
+        padding-right: 1.5rem !important;
+    }
+}
